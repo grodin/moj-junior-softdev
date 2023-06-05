@@ -1,48 +1,23 @@
 package com.omricat.moj.commerce
 
-sealed class Product(val productName: String) {
-    object FR1 : Product("Fruit tea")
-    object SR1 : Product("Strawberries")
-    object CF1 : Product("Coffee")
+sealed class Product(val productName: String, val standardPrice: Price) {
+    object FR1 : Product("Fruit tea", standardPrice = Price(311u))
+    object SR1 : Product("Strawberries", standardPrice = Price(500u))
+    object CF1 : Product("Coffee", standardPrice = Price(1123u))
 }
 
-@JvmInline value class Price(val priceInPence: Int)
+fun Collection<Product>.sum(): Price = Price(sumOf { it.standardPrice.priceInPence })
 
-operator fun Price.plus(other: Price): Price = Price(this.priceInPence + other.priceInPence)
-
-operator fun Price.times(multiple: Int): Price = Price(this.priceInPence * multiple)
-
-fun Product.standardPrice(): Price =
-    when (this) {
-        is Product.FR1 -> Price(311)
-        is Product.SR1 -> Price(500)
-        is Product.CF1 -> Price(1123)
+fun checkout(shoppingCart: List<Product>, offers: List<Offer>): Price {
+    var remainingItems = shoppingCart.toList()
+    var totalPrice = Price(0u)
+    offers.forEach { offer ->
+        val result = offer.applyOffer(remainingItems)
+        totalPrice += result.price
+        remainingItems = result.remainingItems
     }
-
-fun Product.SR1.bulkPrice(): Price = Price(450)
-
-fun checkout(shoppingCart: List<Product>): Price =
-    with(shoppingCart) {
-        filterIsInstance<Product.FR1>().totalPrice() +
-            filterIsInstance<Product.SR1>().totalPrice() +
-            filterIsInstance<Product.CF1>().totalPrice()
-    }
-
-@JvmName("totalFR1Price")
-private fun List<Product.FR1>.totalPrice(): Price {
-    // Each pair is priced as a single item (Buy-one-get-one-free)
-    val numberOfPairs = size / 2
-
-    // Any leftovers after removing the pairs (can only be zero or one)
-    val numberOfLeftovers = size % 2
-    return Product.FR1.standardPrice() * (numberOfPairs + numberOfLeftovers)
+    return totalPrice + remainingItems.sum()
 }
 
-@JvmName("totalSR1Price")
-private fun List<Product.SR1>.totalPrice(): Price {
-    val discountedPrice = if (size >= 3) Product.SR1.bulkPrice() else Product.SR1.standardPrice()
-    return discountedPrice * size
-}
+val currentOffers = listOf(FR1BuyOneGetOneFreeOffer, SR1BulkDiscountOffer)
 
-@JvmName("totalCF1Price")
-private fun List<Product.CF1>.totalPrice(): Price = Product.CF1.standardPrice() * size
