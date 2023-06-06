@@ -21,7 +21,7 @@ interface Offer {
  */
 object FR1BuyOneGetOneFreeOffer : Offer {
     override fun applyOffer(items: List<Product>): Offer.Result {
-        val onlyFr1Items = items.filterIsInstance<Product.FR1>()
+        val onlyFr1Items = items.filterIsInstance<FR1>()
 
         // Each pair is priced as a single item (Buy-one-get-one-free)
         val numberOfPairs = onlyFr1Items.size / 2
@@ -29,7 +29,7 @@ object FR1BuyOneGetOneFreeOffer : Offer {
         // Any leftovers after removing the pairs (can only be zero or one)
         val numberOfLeftovers = onlyFr1Items.size % 2
         return Offer.Result(
-            price = Product.FR1.standardPrice * (numberOfPairs + numberOfLeftovers),
+            price = FR1.standardPrice * (numberOfPairs + numberOfLeftovers),
             processedItems = onlyFr1Items
         )
     }
@@ -43,8 +43,8 @@ object SR1BulkDiscountOffer : Offer {
     val bulkPrice = Price(450u)
 
     override fun applyOffer(items: List<Product>): Offer.Result {
-        val onlySr1Items = items.filterIsInstance<Product.SR1>()
-        val itemPrice = if (onlySr1Items.size >= 3) bulkPrice else Product.SR1.standardPrice
+        val onlySr1Items = items.filterIsInstance<SR1>()
+        val itemPrice = if (onlySr1Items.size >= 3) bulkPrice else SR1.standardPrice
         return Offer.Result(
             price = itemPrice * onlySr1Items.size,
             processedItems = onlySr1Items

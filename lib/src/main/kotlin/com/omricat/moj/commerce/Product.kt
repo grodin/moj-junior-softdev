@@ -1,10 +1,51 @@
 package com.omricat.moj.commerce
 
-/**
- * Abstract class representing a product we sell
- */
-sealed class Product(val productName: String, val standardPrice: Price) {
-    object FR1 : Product("Fruit tea", standardPrice = Price(311u))
-    object SR1 : Product("Strawberries", standardPrice = Price(500u))
-    object CF1 : Product("Coffee", standardPrice = Price(1123u))
+/** Interface for products we sell */
+interface Product {
+    val productName: String
+    val standardPrice: Price
+}
+
+private class CompanionProduct(
+    override val productName: String,
+    override val standardPrice: Price
+) : Product
+
+class FR1 : Product {
+    override val productName: String
+        get() = Companion.productName
+
+    override val standardPrice: Price
+        get() = Companion.standardPrice
+
+    companion object {
+        val productName = "Fruit tea"
+        val standardPrice = Price(311u)
+    }
+}
+
+class SR1 : Product {
+    override val productName: String
+        get() = Companion.productName
+
+    override val standardPrice: Price
+        get() = Companion.standardPrice
+
+    companion object {
+        val productName = "Strawberries"
+        val standardPrice = Price(500u)
+    }
+}
+
+class CF1 : Product {
+    override val productName: String
+        get() = Companion.productName
+
+    override val standardPrice: Price
+        get() = Companion.standardPrice
+    
+    companion object {
+        val productName = "Coffee"
+        val standardPrice = Price(1123u)
+    }
 }

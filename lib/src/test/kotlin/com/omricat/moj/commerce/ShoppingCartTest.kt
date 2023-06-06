@@ -12,36 +12,36 @@ class ShoppingCartTest {
 
     @Test
     fun singleFruitTeaIsStandardPrice() {
-        val products = listOf(Product.FR1)
+        val products = listOf(FR1())
         val checkoutTotal = checkout(products, testOffers)
-        assertEquals(expected = Product.FR1.standardPrice, actual = checkoutTotal)
+        assertEquals(expected = FR1.standardPrice, actual = checkoutTotal)
     }
 
     @Test
     fun singleStrawberriesIsStandardPrice() {
-        val products = listOf(Product.SR1)
+        val products = listOf(SR1())
         val checkoutTotal = checkout(products, testOffers)
-        assertEquals(expected = Product.SR1.standardPrice, actual = checkoutTotal)
+        assertEquals(expected = SR1.standardPrice, actual = checkoutTotal)
     }
 
     @Test
     fun singleCoffeeIsStandardPrice() {
-        val products = listOf(Product.CF1)
+        val products = listOf(CF1())
         val checkoutTotal = checkout(products, testOffers)
-        assertEquals(expected = Product.CF1.standardPrice, actual = checkoutTotal)
+        assertEquals(expected = CF1.standardPrice, actual = checkoutTotal)
     }
 
     @Test
     fun twoFruitTeasCostsSameAsSingle() {
-        val products = listOf(Product.FR1, Product.FR1)
+        val products = listOf(FR1(), FR1())
         val checkoutTotal = checkout(products, testOffers)
-        assertEquals(expected = Product.FR1.standardPrice, actual = checkoutTotal)
+        assertEquals(expected = FR1.standardPrice, actual = checkoutTotal)
     }
 
     @Test
     fun fourFruitTeasCostsSameAsThree() {
-        val threeFruitTeas = listOf(Product.FR1, Product.FR1, Product.FR1)
-        val fourFruitTeas = listOf(Product.FR1, Product.FR1, Product.FR1, Product.FR1)
+        val threeFruitTeas = listOf(FR1(), FR1(), FR1())
+        val fourFruitTeas = listOf(FR1(), FR1(), FR1(), FR1())
         assertEquals(
             actual = checkout(threeFruitTeas, testOffers),
             expected = checkout(fourFruitTeas, testOffers)
@@ -50,14 +50,14 @@ class ShoppingCartTest {
 
     @Test
     fun twoStrawberriesCostsStandardPrice() {
-        val twoStrawberries = listOf(Product.SR1, Product.SR1)
+        val twoStrawberries = listOf(SR1(), SR1())
         val checkoutTotal = checkout(twoStrawberries, testOffers)
-        assertEquals(expected = Product.SR1.standardPrice * 2, actual = checkoutTotal)
+        assertEquals(expected = SR1.standardPrice * 2, actual = checkoutTotal)
     }
 
     @Test
     fun threeStrawberriesUsesBulkDiscount() {
-        val threeStrawberries = listOf(Product.SR1, Product.SR1, Product.SR1)
+        val threeStrawberries = listOf(SR1(), SR1(), SR1())
         assertEquals(
             expected = SR1BulkDiscountOffer.bulkPrice * threeStrawberries.size,
             actual = checkout(threeStrawberries, testOffers)
@@ -68,14 +68,14 @@ class ShoppingCartTest {
     fun checkoutOrderDoesntAffectPrice() {
         val mixedShoppingCart =
             listOf(
-                Product.CF1,
-                Product.SR1,
-                Product.FR1,
-                Product.SR1,
-                Product.SR1,
-                Product.CF1,
-                Product.FR1,
-                Product.FR1
+                CF1(),
+                SR1(),
+                FR1(),
+                SR1(),
+                SR1(),
+                CF1(),
+                FR1(),
+                FR1()
             )
         val shuffledShoppingCart = mixedShoppingCart.shuffled()
         assertEquals(
