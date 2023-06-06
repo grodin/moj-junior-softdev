@@ -1,5 +1,8 @@
 package com.omricat.moj.commerce
 
+/**
+ * Wrapper for a price in pence
+ */
 @JvmInline
 value class Price(val priceInPence: UInt)
 

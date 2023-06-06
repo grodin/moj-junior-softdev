@@ -5,7 +5,10 @@ import kotlin.test.assertEquals
 
 class ShoppingCartTest {
 
-    val testOffers = listOf(FR1BuyOneGetOneFreeOffer, SR1BulkDiscountOffer)
+    private val testOffers = listOf(FR1BuyOneGetOneFreeOffer, SR1BulkDiscountOffer)
+
+    private fun checkout(items: List<Product>, offers: List<Offer>): Price =
+        ShoppingCart(offers).apply { scanAllItems(items) }.checkout()
 
     @Test
     fun singleFruitTeaIsStandardPrice() {
@@ -56,7 +59,7 @@ class ShoppingCartTest {
     fun threeStrawberriesUsesBulkDiscount() {
         val threeStrawberries = listOf(Product.SR1, Product.SR1, Product.SR1)
         assertEquals(
-            expected = SR1BulkDiscountOffer.bulkPrice * 3,
+            expected = SR1BulkDiscountOffer.bulkPrice * threeStrawberries.size,
             actual = checkout(threeStrawberries, testOffers)
         )
     }
